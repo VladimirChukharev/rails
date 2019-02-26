@@ -1,0 +1,33 @@
+- step: # Each step describes an action that can be run using the interface
+    name: train-model # Name of the step shown in the interface
+    image: ufoym/deepo:all-py36 # Specify image for the step. NOTE: image must have necessary libraries!
+    command: # BASH Command lines to be run
+      - echo "Unpacking training data"
+      - tar -C /valohai/inputs/ -xf /valohai/inputs/train/*.tar # Extracting train data (train.tar)
+      - echo "Unpacking test data"
+      - tar -C /valohai/inputs/ -xf /valohai/inputs/test/*.tar # Extracting test data (test.tar)
+      - echo "Starting training script"
+      - python TRAIN_MODEL.py {parameters} # Run training script, here as an example labeled "TRAIN_MODEL.py"
+    inputs:
+      - name: train # Specify inputs for the interface
+      - name: test
+    parameters: # Specify parameters, here as an example: 1) number of epochs and 2) batch size 
+      - name: 'number of epochs'
+        pass-as: --epochs={v}
+        type: integer
+        default: 200
+      - name: 'batch size'
+        pass-as: --batch-size={v}
+        type: integer
+        default: 100
+
+
+- step: # Another example step to check environment
+    name: check-model-environment
+    image: ufoym/deepo:all-py36
+    command:
+      - pwd
+      - ls -la
+      - nvidia-smi
+      - python --version
+      - pip list
