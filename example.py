@@ -19,7 +19,8 @@ train_folder = os.environ.get("TRAIN_DIR", os.path.join(input_base_folder, "trai
 test_folder = os.environ.get("TEST_DIR", os.path.join(input_base_folder, "test"))
 
 
-def LogAsJSON(epoch, logs=None):
+def log_as_json(epoch, logs=None):
+    """Write information to log journal in JSON format"""
     logs = logs or {}
     meta = {
         "epoch": epoch,
@@ -30,15 +31,19 @@ def LogAsJSON(epoch, logs=None):
 
 
 def do_train(*, epochs, batch_size):
+    """"Teach the neuron network using set of samples"""
     #
     #
     #   Insert your training code here
     #
     #
-    pass
+    print(batch_size)
+    log_as_json(epochs)
+    return {}
 
 
 def main():
+    """Do the job"""
     # Parse arguments (See example.yaml)
     ap = argparse.ArgumentParser()
     ap.add_argument('--epochs', default=10, type=int)
