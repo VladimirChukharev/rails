@@ -126,14 +126,21 @@ def do_train(*, epochs, batch_size):
     for param in model.parameters():
         param.requires_grad = False
 
+    n_inputs = model.fc.in_features
+    n_outputs = model.fc.out_features
+    print(n_inputs, n_outputs)
+
     model.fc = nn.Sequential(
         nn.Linear(2048, 128),
+        # nn.Conv2d(2048, 3, 3, 3),
         nn.ReLU(inplace=True),
+        # nn.Conv2d(1, 1, 3),
         nn.Linear(128, 20)).to(device)
 
     # criterion = nn.CrossEntropyLoss()
+    # criterion = nn.MSELoss()
     # optimizer = torch.optim.Adam(model.fc.parameters())
-    criterion = nn.MSELoss()
+    criterion = nn.SmoothL1Loss()
     optimizer = torch.optim.ASGD(model.fc.parameters())
 
     print(sum(p.numel() for p in model.fc.parameters() if p.requires_grad))
@@ -155,9 +162,11 @@ def do_train(*, epochs, batch_size):
 
             for inputs, labels in dataloaders[phase]:
                 inputs = inputs.to(device)
+                print(labels)
                 labels = labels.to(device)
 
                 outputs = model(inputs)
+                print(outputs.T, labels)
                 loss = criterion(outputs, labels)
 
                 if phase == 'train':
