@@ -166,7 +166,7 @@ def do_train(*, epochs, batch_size):
                 labels = labels.to(device)
 
                 outputs = model(inputs)
-                print(outputs.T, labels)
+                print(outputs, labels)
                 loss = criterion(outputs, labels)
 
                 if phase == 'train':
